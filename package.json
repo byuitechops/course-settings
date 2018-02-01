@@ -1,5 +1,5 @@
 {
-    "name": "course-set-settings",
+    "name": "course-settings",
     "version": "1.0.0",
     "description": "",
     "main": "main.js",
@@ -17,13 +17,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/byuitechops/course-set-settings.git"
+        "url": "git+https://github.com/byuitechops/course-settings.git"
     },
     "author": "Kevin Whittaker",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/byuitechops/course-set-settings/issues"
+        "url": "https://github.com/byuitechops/course-settings/issues"
     },
-    "homepage": "https://github.com/byuitechops/course-set-settings#readme",
+    "homepage": "https://github.com/byuitechops/course-settings#readme",
     "childType": "postImport"
 }
