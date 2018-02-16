@@ -5,27 +5,79 @@
 /* Put dependencies here */
 
 /* Include this line only if you are going to use Canvas API */
- const canvas = require('canvas-wrapper');
-
-/* View available course object functions */
-// https://github.com/byuitechops/d2l-to-canvas-conversion-tool/blob/master/documentation/classFunctions.md
+const canvas = require('canvas-wrapper');
+const asyncLib = require('async');
 
 module.exports = (course, stepCallback) => {
-
-    /* Used to log successful actions (specific items) */
-    course.log('Category', {'header': data});
-
-    /* How to log a generic message. Use in place of console.log */
-    course.message('message');
-
-    /* How to report a warning */
-    // course.warning('warning message...');
     
-    /* How to report an error */
-    // course.error(err);
 
-    /* You should never call the stepCallback with an error. We want the
-    whole program to run when testing so we can catch all existing errors */
+    function updateCourse(callback) {
+        var testObj = {
+            'course[license]': 'private',
+            'course[is_public_to_auth_users]': false,
+            'course[is_public]': false,
+            'course[public_syllabus_to_auth]': true,
+            'course[course_format]': 'online',
+            'course[term_id]': 5,
+            'course[locale]': 'en',
+            'course[time_zone]': 'America/Denver',
+            'course[grading_standard_id': 1
+        };
+        canvas.put(`/api/v1/courses/${course.info.canvasOU}`, testObj, (err, newCourse) => {
+            if (err) {
+                course.error(err);
+                callback(null);
+                return;
+            }
+            course.message('Course updated successfully.');
+            console.log(newCourse);
+            callback(null);
+        });
+    }
 
-    stepCallback(null, course);
+    function updateSettings(callback) {
+        var testObj = {
+            'lock_all_announcements': false
+        };
+        canvas.put(`/api/v1/courses/${course.info.canvasOU}/settings`, testObj, (err, newSettings) => {
+            if (err) {
+                course.error(err);
+                callback(null);
+                return;
+            }
+            course.message('Course settings updated successfully.');
+            console.log(newSettings);
+            callback(null);
+        });
+    }
+
+    function updateFeatures(callback) {
+        var testObj = {
+            'state': 'on'
+        };
+        canvas.put(`/api/v1/courses/${course.info.canvasOU}/features/flags/new_gradebook`, testObj, (err, newFeatures) => {
+            if (err) {
+                course.error(err);
+                callback(null);
+                return;
+            }
+            course.message('Course features updated successfully.');
+            console.log(newFeatures);
+            callback(null);
+        });
+    }
+
+    var tasks = [
+        updateCourse,
+        updateSettings,
+        updateFeatures
+    ];
+
+    asyncLib.series(tasks, (err) => {
+        if (err) {
+            course.error(err);
+        }
+        stepCallback(null, course);
+    });
+
 };

@@ -1,7 +1,7 @@
 {
-    "name": "course-settings",
+    "name": "child-template",
     "version": "1.0.0",
-    "description": "",
+    "description": "Put your child module's description here",
     "main": "main.js",
     "dependencies": {
         "canvas-wrapper": "git+https://github.com/byuitechops/Canvas-wrapper"
@@ -17,13 +17,13 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/byuitechops/course-settings.git"
+        "url": "git+https://github.com/byuitechops/child-template.git"
     },
-    "author": "Kevin Whittaker",
+    "author": "Zachary Williams, Daniel Green",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/byuitechops/course-settings/issues"
+        "url": "https://github.com/byuitechops/child-template/issues"
     },
-    "homepage": "https://github.com/byuitechops/course-settings#readme",
+    "homepage": "https://github.com/byuitechops/child-template#readme",
     "childType": "postImport"
 }
