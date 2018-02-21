@@ -1,14 +1,14 @@
 # Child Module Title
-### *Package Name*: child-module-title
-### *Child Type*: <post/pre import>
-### *Platform*: <online/pathway/campus/all> (Ask Zach or Daniel about this)
-### *Required*: <Required/Recommended/Optional> (Ask Zach or Daniel about this)
+### *Package Name*: course-settings
+### *Child Type*: pre-import
+### *Platform*: online
+### *Required*: required
 
 This child module is built to be used by the Brigham Young University - Idaho D2L to Canvas Conversion Tool. It utilizes the standard `module.exports => (course, stepCallback)` signature and uses the Conversion Tool's standard logging functions. You can view extended documentation [Here](https://github.com/byuitechops/d2l-to-canvas-conversion-tool/tree/master/documentation).
 
 ## Purpose
 
-This module sets the course settings to the ones specified for online courses.
+This module sets the course settings as specified in the requirement section in this document for online courses.
 
 ## How to Install
 
