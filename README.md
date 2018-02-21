@@ -8,7 +8,7 @@ This child module is built to be used by the Brigham Young University - Idaho D2
 
 ## Purpose
 
-This module sets the course settings as specified in the requirement section in this document for online courses.
+This module sets the course settings as specified in the requirements section in this document for online courses.
 
 ## How to Install
 
