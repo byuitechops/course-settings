@@ -1,6 +1,6 @@
-# Child Module Title
+# Course Settings
 ### *Package Name*: course-settings
-### *Child Type*: pre-import
+### *Child Type*: post-import
 ### *Platform*: online
 ### *Required*: required
 
@@ -8,7 +8,7 @@ This child module is built to be used by the Brigham Young University - Idaho D2
 
 ## Purpose
 
-This module sets the course settings as specified in the requirements section in this document for online courses.
+This module sets the course settings for online courses as specified in the requirements section in this document.
 
 ## How to Install
 
@@ -32,7 +32,9 @@ None.
 
 The module uses the Canvas Courses API to change settings of each online course.
 
-1. Updates the default course settings
+1. Updates the default course values
+2. Updates the default course settings
+3. Updates the "New Gradebook" course feature
 
 ## Log Categories
 
@@ -51,4 +53,5 @@ These are the settings that it sets:
     Visibility: Course
     Syllabus Visability: Institution
     Format: Online
+    Course Image: Sets to "dashboard.jpg"
     "Disable comments on announcements" unchecked
