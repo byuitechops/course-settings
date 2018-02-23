@@ -2,15 +2,10 @@
 
 /* Module Description */
 
-/* Put dependencies here */
-
-/* Include this line only if you are going to use Canvas API */
 const canvas = require('canvas-wrapper');
 const asyncLib = require('async');
 
 module.exports = (course, stepCallback) => {
-    
-
     function updateCourse(callback) {
         var testObj = {
             'course[license]': 'private',
@@ -30,7 +25,7 @@ module.exports = (course, stepCallback) => {
                 return;
             }
             course.message('Course updated successfully.');
-            console.log(newCourse);
+            // console.log(newCourse);
             callback(null);
         });
     }
@@ -46,7 +41,7 @@ module.exports = (course, stepCallback) => {
                 return;
             }
             course.message('Course settings updated successfully.');
-            console.log(newSettings);
+            // console.log(newSettings);
             callback(null);
         });
     }
@@ -62,7 +57,7 @@ module.exports = (course, stepCallback) => {
                 return;
             }
             course.message('Course features updated successfully.');
-            console.log(newFeatures);
+            // console.log(newFeatures);
             callback(null);
         });
     }
