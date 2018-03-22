@@ -4,7 +4,7 @@
     "description": "Put your child module's description here",
     "main": "main.js",
     "dependencies": {
-        "canvas-wrapper": "git+https://github.com/byuitechops/canvas-wrapper"
+        "canvas-wrapper": "github:byuitechops/canvas-wrapper"
     },
     "devDependencies": {
         "async": "^2.6.0",
