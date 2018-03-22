@@ -16,7 +16,7 @@ module.exports = (course, stepCallback) => {
             'course[term_id]': 5,
             'course[locale]': 'en',
             'course[time_zone]': 'America/Denver',
-            'course[grading_standard_id': 1
+            'course[grading_standard_id]': 1
         };
         canvas.put(`/api/v1/courses/${course.info.canvasOU}`, testObj, (err, newCourse) => {
             if (err) {
