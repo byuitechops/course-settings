@@ -32,7 +32,13 @@ module.exports = (course, stepCallback) => {
 
     function updateSettings(callback) {
         var testObj = {
-            'lock_all_announcements': false
+            'lock_all_announcements': false,
+            'allow_student_forum_attachments': true,
+            'show_announcements_on_home_page': true,
+            'allow_student_organized_groups': false,
+            'home_page_announcement_limit': 2,
+
+
         };
         canvas.put(`/api/v1/courses/${course.info.canvasOU}/settings`, testObj, (err, newSettings) => {
             if (err) {
