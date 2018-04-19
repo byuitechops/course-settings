@@ -6,6 +6,12 @@ const canvas = require('canvas-wrapper');
 const asyncLib = require('async');
 
 module.exports = (course, stepCallback) => {
+
+    function buildSISID() {
+        var platform = course.settings.platform[0].toUpperCase() + course.settings.platform.slice(1);
+        return `${platform}.Master.${course.info.courseCode}`;
+    }
+
     function updateCourse(callback) {
         var testObj = {
             'course[license]': 'private',
@@ -16,7 +22,8 @@ module.exports = (course, stepCallback) => {
             'course[term_id]': 5,
             'course[locale]': 'en',
             'course[time_zone]': 'America/Denver',
-            'course[grading_standard_id]': 1
+            'course[grading_standard_id]': 1,
+            'course[sis_course_id]': buildSISID()
         };
         canvas.put(`/api/v1/courses/${course.info.canvasOU}`, testObj, (err, newCourse) => {
             if (err) {
@@ -25,29 +32,25 @@ module.exports = (course, stepCallback) => {
                 return;
             }
             course.message('Course updated successfully.');
-            // console.log(newCourse);
             callback(null);
         });
     }
 
     function updateSettings(callback) {
-        var testObj = {
+        var putObj = {
             'lock_all_announcements': false,
             'allow_student_forum_attachments': true,
             'show_announcements_on_home_page': true,
             'allow_student_organized_groups': false,
             'home_page_announcement_limit': 2,
-
-
         };
-        canvas.put(`/api/v1/courses/${course.info.canvasOU}/settings`, testObj, (err, newSettings) => {
+        canvas.put(`/api/v1/courses/${course.info.canvasOU}/settings`, putObj, (err, newSettings) => {
             if (err) {
                 course.error(err);
                 callback(null);
                 return;
             }
             course.message('Course settings updated successfully.');
-            // console.log(newSettings);
             callback(null);
         });
     }
@@ -63,7 +66,6 @@ module.exports = (course, stepCallback) => {
                 return;
             }
             course.message('Course features updated successfully.');
-            // console.log(newFeatures);
             callback(null);
         });
     }
