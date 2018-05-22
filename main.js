@@ -73,14 +73,6 @@ module.exports = (course, stepCallback) => {
     /**************
      * START HERE
      *************/
-
-    var validPlatforms = ['online', 'pathway'];
-    if (!validPlatforms.includes(course.settings.platform)) {
-        course.message('Invalid platform. Skipping child module');
-        stepCallback(null, course);
-        return;
-    }
-
     var tasks = [
         updateCourse,
         updateSettings,
