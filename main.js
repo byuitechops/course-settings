@@ -13,12 +13,14 @@ module.exports = (course, stepCallback) => {
     }
 
     function updateCourse(callback) {
+        var format = course.settings.platform === 'online' || course.settings.platform === 'pathway'? 'online' : 'on_campus';
+
         var testObj = {
             'course[license]': 'private',
             'course[is_public_to_auth_users]': false,
             'course[is_public]': false,
             'course[public_syllabus_to_auth]': true,
-            'course[course_format]': 'online',
+            'course[course_format]': format,
             'course[term_id]': 5,
             'course[locale]': 'en',
             'course[time_zone]': 'America/Denver',
