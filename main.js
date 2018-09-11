@@ -13,6 +13,7 @@ module.exports = (course, stepCallback) => {
     function getTermID(termName, cb) {
         if (!termName) {
             cb(null, null);
+            return;
         }
         /* use top account for enrollment terms */
         canvas.get('/api/v1/accounts/1/terms', (err, terms) => {
@@ -76,7 +77,7 @@ module.exports = (course, stepCallback) => {
                     if (err) {
                         course.error(err);
                     } else if (termId === null) {
-                        course.error(new Error('Unable to determine termID'));
+                        course.warning('Unable to determine termID');
                     } else {
                         campusCourse['course[term_id]'] = termId;
                     }
