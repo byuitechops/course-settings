@@ -24,6 +24,7 @@ module.exports = (course, callback) => {
                     //'sis_course_id': buildSISID() -- Do not have permissions
                 };
                 for (const x in testObj) {
+                    tap.ok(canvasCourse[x], `${x} is empty does not exist on the Canvas course object`);
                     tap.equal(canvasCourse[x], testObj[x], `${x} failed to update.`);
                 }
             }
@@ -45,6 +46,7 @@ module.exports = (course, callback) => {
                     'home_page_announcement_limit': 2,
                 };
                 for (const x in putObj) {
+                    tap.ok(courseSettings[x], `${x} is empty or does not exist on the Canvas course object`);
                     tap.equal(courseSettings[x], putObj[x], `${x} failed to update.`);
                 }
             }
@@ -61,6 +63,7 @@ module.exports = (course, callback) => {
                     'state': 'on'
                 };
                 for (const x in testObj) {
+                    tap.ok(newGradebook[x], `${x} is empty or does not exist on the Canvas course object`);
                     tap.equal(newGradebook[x], testObj[x], 'The new gradebook failed to enable.');
                 }
             }
