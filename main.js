@@ -65,8 +65,8 @@ module.exports = (course, stepCallback) => {
      *
      * Arguments: callback
      * 
-     * Description: The updateCourse function creates a
-     * test object that contatins key/value pairs of the
+     * Description: The updateCourse function creates
+     * objects that contatins key/value pairs of the
      * updated course object. This object is PUT to
      * Canvas which then updates the course object 
      * in Canvas.
