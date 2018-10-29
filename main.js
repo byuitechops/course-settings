@@ -1,11 +1,42 @@
 /*eslint-env node, es6*/
 
-/* Module Description */
+/*****************************************************
+ * This child module sets course settings according
+ * to predefined standards and user input for online,
+ * campus, and pathway courses
+ ****************************************************/
 
 const canvas = require('canvas-wrapper');
 const asyncLib = require('async');
 
 module.exports = (course, stepCallback) => {
+    function getTermID(termName, cb) {
+        if (!termName) {
+            cb(null, null);
+            return;
+        }
+        /* use top account for enrollment terms */
+        canvas.get('/api/v1/accounts/1/terms', (err, terms) => {
+            if (err) {
+                cb(err, null);
+                return;
+            }
+
+            try {
+                terms = terms[0].enrollment_terms;
+
+                var term = terms.find(term => term.name === termName);
+                if (term == undefined) {
+                    throw new Error('Unable to find matching term');
+                } else {
+                    cb(null, term.id);
+                }
+
+            } catch (findErr) {
+                cb(findErr, null);
+            }
+        });
+    }
 
     /******************************************************
      *                  buildSISID()
@@ -36,27 +67,59 @@ module.exports = (course, stepCallback) => {
      * Return Type: none
      ******************************************************/
     function updateCourse(callback) {
-        var testObj = {
-            'course[license]': 'private',
-            'course[is_public_to_auth_users]': false,
-            'course[is_public]': false,
-            'course[public_syllabus_to_auth]': true,
-            'course[course_format]': 'online',
-            'course[term_id]': 5,
-            'course[locale]': 'en',
-            'course[time_zone]': 'America/Denver',
-            'course[grading_standard_id]': 1,
-            'course[sis_course_id]': buildSISID()
-        };
-        canvas.put(`/api/v1/courses/${course.info.canvasOU}`, testObj, (err, newCourse) => {
-            if (err) {
-                // An error occurred while updating the course object
-                course.error(err);
-                callback(null);
-                return;
+        function buildPutObj(cb) {
+            var onlineCourse = {
+                'course[license]': 'private',
+                'course[is_public_to_auth_users]': false,
+                'course[is_public]': false,
+                'course[public_syllabus_to_auth]': true,
+                'course[course_format]': 'online',
+                'course[term_id]': 5,
+                'course[locale]': 'en',
+                'course[time_zone]': 'America/Denver',
+                'course[grading_standard_id]': 1,
+                'course[sis_course_id]': buildSISID()
+            };
+            var campusCourse = {
+                'course[license]': 'private',
+                'course[is_public_to_auth_users]': false,
+                'course[is_public]': false,
+                'course[public_syllabus_to_auth]': true,
+                'course[course_format]': 'on_campus',
+                'course[term_id]': 5,
+                'course[locale]': 'en',
+                'course[time_zone]': 'America/Denver',
+                'course[grading_standard_id]': 1,
+                'course[sis_course_id]': `${buildSISID()}-InstructorLastName`
+            };
+
+            if (course.settings.platform !== 'campus') {
+                cb(onlineCourse);
+            } else {
+                getTermID(course.settings.term, (err, termId) => {
+                    if (err) {
+                        course.error(err);
+                    } else if (termId === null) {
+                        course.warning('Unable to determine termID');
+                    } else {
+                        campusCourse['course[term_id]'] = termId;
+                    }
+
+                    cb(campusCourse);
+                });
             }
-            course.message('Course updated successfully.');
-            callback(null);
+        }
+
+        buildPutObj((putObj) => {
+            canvas.put(`/api/v1/courses/${course.info.canvasOU}`, putObj, (err, newCourse) => {
+                if (err) {
+                    course.error(err);
+                    callback(null);
+                    return;
+                }
+                course.message('Course updated successfully.');
+                callback(null);
+            });
         });
     }
 
@@ -74,13 +137,26 @@ module.exports = (course, stepCallback) => {
      * Return Type: none
      ******************************************************/
     function updateSettings(callback) {
-        var putObj = {
+
+        var campusObj = {
             'lock_all_announcements': false,
             'allow_student_forum_attachments': true,
             'show_announcements_on_home_page': true,
             'allow_student_organized_groups': false,
             'home_page_announcement_limit': 2,
         };
+
+        var onlineObj = {
+            'lock_all_announcements': false,
+            'allow_student_forum_attachments': true,
+            'show_announcements_on_home_page': true,
+            'allow_student_discussion_editing': true,
+            'allow_student_organized_groups': true,
+            'home_page_announcement_limit': 2,
+        };
+
+        var putObj = course.settings.platform === 'online' ? campusObj : onlineObj;
+
         canvas.put(`/api/v1/courses/${course.info.canvasOU}/settings`, putObj, (err, newSettings) => {
             if (err) {
                 // An error occurred while updating the course settings
@@ -124,15 +200,6 @@ module.exports = (course, stepCallback) => {
     /**************
      * START HERE
      *************/
-
-    var validPlatforms = ['online', 'pathway'];
-    if (!validPlatforms.includes(course.settings.platform)) {
-        course.message('Invalid platform. Skipping child module');
-        stepCallback(null, course);
-        return;
-    }
-
-    // A list of functions that need to be called
     var tasks = [
         updateCourse,
         updateSettings,
