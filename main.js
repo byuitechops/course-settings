@@ -10,6 +10,15 @@ const canvas = require('canvas-wrapper');
 const asyncLib = require('async');
 
 module.exports = (course, stepCallback) => {
+    /******************************************************
+     *                  getTermID()
+     *
+     * Arguments: termName: String, cb: Function
+     * 
+     * Description: The getTermID function gets the termID
+     * 
+     * Return Type: None
+     ******************************************************/
     function getTermID(termName, cb) {
         if (!termName) {
             cb(null, null);
@@ -18,20 +27,18 @@ module.exports = (course, stepCallback) => {
         /* use top account for enrollment terms */
         canvas.get('/api/v1/accounts/1/terms', (err, terms) => {
             if (err) {
+                // An error occurred while getting the terms
                 cb(err, null);
                 return;
             }
-
             try {
                 terms = terms[0].enrollment_terms;
-
                 var term = terms.find(term => term.name === termName);
                 if (term == undefined) {
                     throw new Error('Unable to find matching term');
                 } else {
                     cb(null, term.id);
                 }
-
             } catch (findErr) {
                 cb(findErr, null);
             }
