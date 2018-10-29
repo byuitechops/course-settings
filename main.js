@@ -10,6 +10,15 @@ const canvas = require('canvas-wrapper');
 const asyncLib = require('async');
 
 module.exports = (course, stepCallback) => {
+    /******************************************************
+     *                  getTermID()
+     *
+     * Arguments: termName: String, cb: Function
+     * 
+     * Description: The getTermID function gets the termID
+     * 
+     * Return Type: None
+     ******************************************************/
     function getTermID(termName, cb) {
         if (!termName) {
             cb(null, null);
@@ -18,31 +27,52 @@ module.exports = (course, stepCallback) => {
         /* use top account for enrollment terms */
         canvas.get('/api/v1/accounts/1/terms', (err, terms) => {
             if (err) {
+                // An error occurred while getting the terms
                 cb(err, null);
                 return;
             }
-
             try {
                 terms = terms[0].enrollment_terms;
-
                 var term = terms.find(term => term.name === termName);
                 if (term == undefined) {
                     throw new Error('Unable to find matching term');
                 } else {
                     cb(null, term.id);
                 }
-
             } catch (findErr) {
                 cb(findErr, null);
             }
         });
     }
 
+    /******************************************************
+     *                  buildSISID()
+     *
+     * Arguments: None
+     * 
+     * Description: The buildSISID function builds the
+     * SISID and returns it as a String.
+     * 
+     * Return Type: String
+     ******************************************************/
     function buildSISID() {
         var platform = course.settings.platform[0].toUpperCase() + course.settings.platform.slice(1);
         return `${platform}.Master.${course.info.courseCode}`;
     }
 
+    /******************************************************
+     *                  updateCourse()
+     *
+     * Arguments: callback
+     * 
+     * Description: The updateCourse function creates
+     * objects that contatins key/value pairs of the
+     * updated course object. This object is PUT to
+     * Canvas which then updates the course object 
+     * in Canvas.
+     * 
+     * Return Type: none
+     ******************************************************/
     function updateCourse(callback) {
         function buildPutObj(cb) {
             var onlineCourse = {
@@ -100,6 +130,19 @@ module.exports = (course, stepCallback) => {
         });
     }
 
+    /******************************************************
+     *                  updateSettings()
+     *
+     * Arguments: callback
+     * 
+     * Description: The updateSettings function creates an
+     * object contating all of the course settings that
+     * need to be updated. The function then makes a PUT
+     * request to Canvas that updates all of the course
+     * settings.
+     * 
+     * Return Type: none
+     ******************************************************/
     function updateSettings(callback) {
 
         var campusObj = {
@@ -123,6 +166,7 @@ module.exports = (course, stepCallback) => {
 
         canvas.put(`/api/v1/courses/${course.info.canvasOU}/settings`, putObj, (err, newSettings) => {
             if (err) {
+                // An error occurred while updating the course settings
                 course.error(err);
                 callback(null);
                 return;
@@ -132,12 +176,25 @@ module.exports = (course, stepCallback) => {
         });
     }
 
+    /******************************************************
+     *                  updateFeatures()
+     *
+     * Arguments: callback
+     * 
+     * Description: The updateFeatures function turns on
+     * the new gradebook feature in each course. As of
+     * now the object only contatins one key/value pair
+     * to turn on/off the new features.
+     * 
+     * Return Type: none
+     ******************************************************/
     function updateFeatures(callback) {
         var testObj = {
             'state': 'on'
         };
         canvas.put(`/api/v1/courses/${course.info.canvasOU}/features/flags/new_gradebook`, testObj, (err, newFeatures) => {
             if (err) {
+                // An error occurred while turning on the new gradebook
                 course.error(err);
                 callback(null);
                 return;
@@ -156,6 +213,7 @@ module.exports = (course, stepCallback) => {
         updateFeatures
     ];
 
+    // Call each function in the tasks list. When finished continue onto the next tool
     asyncLib.series(tasks, (err) => {
         if (err) {
             course.error(err);
