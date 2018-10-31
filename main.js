@@ -11,13 +11,7 @@ const asyncLib = require('async');
 
 module.exports = (course, stepCallback) => {
     /******************************************************
-     *                  getTermID()
-     *
-     * Arguments: termName: String, cb: Function
-     * 
      * Description: The getTermID function gets the termID
-     * 
-     * Return Type: None
      ******************************************************/
     function getTermID(termName, cb) {
         if (!termName) {
@@ -46,14 +40,8 @@ module.exports = (course, stepCallback) => {
     }
 
     /******************************************************
-     *                  buildSISID()
-     *
-     * Arguments: None
-     * 
      * Description: The buildSISID function builds the
      * SISID and returns it as a String.
-     * 
-     * Return Type: String
      ******************************************************/
     function buildSISID() {
         var platform = course.settings.platform[0].toUpperCase() + course.settings.platform.slice(1);
@@ -61,21 +49,16 @@ module.exports = (course, stepCallback) => {
     }
 
     /******************************************************
-     *                  updateCourse()
-     *
-     * Arguments: callback
-     * 
      * Description: The updateCourse function creates
      * objects that contatins key/value pairs of the
      * updated course object. This object is PUT to
      * Canvas which then updates the course object 
      * in Canvas.
-     * 
-     * Return Type: none
      ******************************************************/
     function updateCourse(callback) {
         function buildPutObj(cb) {
             var onlineCourse = {
+                'course[account_id]': 42,
                 'course[license]': 'private',
                 'course[is_public_to_auth_users]': false,
                 'course[is_public]': false,
@@ -131,17 +114,11 @@ module.exports = (course, stepCallback) => {
     }
 
     /******************************************************
-     *                  updateSettings()
-     *
-     * Arguments: callback
-     * 
      * Description: The updateSettings function creates an
      * object contating all of the course settings that
      * need to be updated. The function then makes a PUT
      * request to Canvas that updates all of the course
      * settings.
-     * 
-     * Return Type: none
      ******************************************************/
     function updateSettings(callback) {
 
@@ -177,22 +154,16 @@ module.exports = (course, stepCallback) => {
     }
 
     /******************************************************
-     *                  updateFeatures()
-     *
-     * Arguments: callback
-     * 
      * Description: The updateFeatures function turns on
      * the new gradebook feature in each course. As of
      * now the object only contatins one key/value pair
      * to turn on/off the new features.
-     * 
-     * Return Type: none
      ******************************************************/
     function updateFeatures(callback) {
-        var testObj = {
+        var putObj = {
             'state': 'on'
         };
-        canvas.put(`/api/v1/courses/${course.info.canvasOU}/features/flags/new_gradebook`, testObj, (err, newFeatures) => {
+        canvas.put(`/api/v1/courses/${course.info.canvasOU}/features/flags/new_gradebook`, putObj, (err, newFeatures) => {
             if (err) {
                 // An error occurred while turning on the new gradebook
                 course.error(err);
