@@ -58,7 +58,7 @@ module.exports = (course, stepCallback) => {
     function updateCourse(callback) {
         function buildPutObj(cb) {
             var onlineCourse = {
-                'course[account_id]': 42,
+                'course[account_id]': course.settings.accountID,
                 'course[license]': 'private',
                 'course[is_public_to_auth_users]': false,
                 'course[is_public]': false,
