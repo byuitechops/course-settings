@@ -30,20 +30,12 @@ module.exports = (course, stepCallback) => {
                 var term = terms.find(term => term.name === termName);
                 //If there is no term that matches the name provided, attempt to get the default term id
                 if (term === undefined) {
-                    var defaultTerm = terms.find(term => term.name === 'Default Term');
-                    if (defaultTerm === undefined) {
-                        //The default term must have been erased or the name has been changed
-                        throw new Error('Unable to find matching term or default term');
-                    } else {
-                        //Callback with the default id
-                        cb(null, defaultTerm.id);
-                    }
+                    throw new Error('Unable to find matching term, Default Term will be used');
                 } else {
                     //Callback with the term id
                     cb(null, term.id);
                 }
             } catch (findErr) {
-                //Neither the user input term nor the default term was found, so callback with error
                 cb(findErr, null);
             }
         });
@@ -86,7 +78,7 @@ module.exports = (course, stepCallback) => {
                 'course[is_public]': false,
                 'course[public_syllabus_to_auth]': true,
                 'course[course_format]': 'on_campus',
-                'course[term_id]': 5,
+                'course[term_id]': 1,
                 'course[locale]': 'en',
                 'course[time_zone]': 'America/Denver',
                 'course[grading_standard_id]': 1,
