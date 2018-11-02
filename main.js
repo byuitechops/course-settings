@@ -28,12 +28,22 @@ module.exports = (course, stepCallback) => {
             try {
                 terms = terms[0].enrollment_terms;
                 var term = terms.find(term => term.name === termName);
-                if (term == undefined) {
-                    throw new Error('Unable to find matching term');
+                //If there is no term that matches the name provided, attempt to get the default term id
+                if (term === undefined) {
+                    var defaultTerm = terms.find(term => term.name === 'Default Term');
+                    if (defaultTerm === undefined) {
+                        //The default term must have been erased or the name has been changed
+                        throw new Error('Unable to find matching term or default term');
+                    } else {
+                        //Callback with the default id
+                        cb(null, defaultTerm.id);
+                    }
                 } else {
+                    //Callback with the term id
                     cb(null, term.id);
                 }
             } catch (findErr) {
+                //Neither the user input term nor the default term was found, so callback with error
                 cb(findErr, null);
             }
         });
