@@ -66,7 +66,7 @@ module.exports = (course, stepCallback) => {
                 'course[is_public]': false,
                 'course[public_syllabus_to_auth]': true,
                 'course[course_format]': 'online',
-                'course[term_id]': 5,
+                'course[term_id]': 5, //Master Courses
                 'course[locale]': 'en',
                 'course[time_zone]': 'America/Denver',
                 'course[grading_standard_id]': 1,
@@ -78,7 +78,7 @@ module.exports = (course, stepCallback) => {
                 'course[is_public]': false,
                 'course[public_syllabus_to_auth]': true,
                 'course[course_format]': 'on_campus',
-                'course[term_id]': 1,
+                'course[term_id]': 1, //Default Term
                 'course[locale]': 'en',
                 'course[time_zone]': 'America/Denver',
                 'course[grading_standard_id]': 1,
