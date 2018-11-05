@@ -28,9 +28,11 @@ module.exports = (course, stepCallback) => {
             try {
                 terms = terms[0].enrollment_terms;
                 var term = terms.find(term => term.name === termName);
-                if (term == undefined) {
-                    throw new Error('Unable to find matching term');
+                //If there is no term that matches the name provided, attempt to get the default term id
+                if (term === undefined) {
+                    throw new Error('Unable to find matching term, Default Term will be used');
                 } else {
+                    //Callback with the term id
                     cb(null, term.id);
                 }
             } catch (findErr) {
@@ -64,7 +66,7 @@ module.exports = (course, stepCallback) => {
                 'course[is_public]': false,
                 'course[public_syllabus_to_auth]': true,
                 'course[course_format]': 'online',
-                'course[term_id]': 5,
+                'course[term_id]': 5, //Master Courses
                 'course[locale]': 'en',
                 'course[time_zone]': 'America/Denver',
                 'course[grading_standard_id]': 1,
@@ -76,7 +78,7 @@ module.exports = (course, stepCallback) => {
                 'course[is_public]': false,
                 'course[public_syllabus_to_auth]': true,
                 'course[course_format]': 'on_campus',
-                'course[term_id]': 5,
+                'course[term_id]': 1, //Default Term
                 'course[locale]': 'en',
                 'course[time_zone]': 'America/Denver',
                 'course[grading_standard_id]': 1,
