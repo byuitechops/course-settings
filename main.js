@@ -69,7 +69,7 @@ module.exports = (course, stepCallback) => {
                 'course[term_id]': 5, //Master Courses
                 'course[locale]': 'en',
                 'course[time_zone]': 'America/Denver',
-                'course[grading_standard_id]': 1,
+                'course[grading_standard_id]': 0,
                 'course[sis_course_id]': buildSISID()
             };
             var campusCourse = {
@@ -81,7 +81,7 @@ module.exports = (course, stepCallback) => {
                 'course[term_id]': 1, //Default Term
                 'course[locale]': 'en',
                 'course[time_zone]': 'America/Denver',
-                'course[grading_standard_id]': 1,
+                'course[grading_standard_id]': 0,
                 'course[sis_course_id]': `${buildSISID()}-InstructorLastName`
             };
 
